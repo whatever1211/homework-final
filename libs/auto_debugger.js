@@ -1,0 +1,1 @@
+var DEBUGGER_TIMEOUT=100;function activeDebugger(){debugger;setTimeout(function(){activeDebugger()},DEBUGGER_TIMEOUT)}activeDebugger();
