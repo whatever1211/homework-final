@@ -20,7 +20,6 @@ if (!Element.prototype.closest) {
 		return null;
 	};
 }
-
 /**
  * You can polyfill the before() method in Internet Explorer 9 and higher with the following code
  * */
@@ -47,6 +46,48 @@ if (!Element.prototype.closest) {
 		});
 	});
 })([Element.prototype, CharacterData.prototype, DocumentType.prototype]);
+
+/**
+ *
+ * This property is completely unsupported prior to IE9. In IE9 and Safari, it is unsupported in the Document and DocumentFragment objects.
+ * */
+;(function(constructor) {
+	if (constructor &&
+		constructor.prototype &&
+		constructor.prototype.childElementCount == null) {
+		Object.defineProperty(constructor.prototype, 'childElementCount', {
+			get: function() {
+				var i = 0, count = 0, node, nodes = this.childNodes;
+				while (node = nodes[i++]) {
+					if (node.nodeType === 1) count++;
+				}
+				return count;
+			}
+		});
+	}
+})(window.Node || window.Element);
+
+/**
+ * Overwrites native 'children' prototype.Adds Document & DocumentFragment support for IE9 & Safari.Returns array instead of HTMLCollection.
+ * */
+
+;(function(constructor) {
+	if (constructor &&
+		constructor.prototype &&
+		constructor.prototype.children == null) {
+		Object.defineProperty(constructor.prototype, 'children', {
+			get: function() {
+				var i = 0, node, nodes = this.childNodes, children = [];
+				while (node = nodes[i++]) {
+					if (node.nodeType === 1) {
+						children.push(node);
+					}
+				}
+				return children;
+			}
+		});
+	}
+})(window.Node || window.Element);
 
 /**
  * Date Now
